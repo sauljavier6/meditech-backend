@@ -13,6 +13,13 @@ import Payment from '../models/Payment';
 import PaymentSale from '../models/PaymentSale';
 import ProductSale from '../models/SaleProduct';
 import Batch from '../models/Batch';
+import Phone from '../models/Phone';
+import Retiro from '../models/Retiro';
+import Facturacion from '../models/Facturacion';
+import Compras from '../models/Compras';
+import ComprasProduct from '../models/ComprasProducts';
+import PaymentCompra from '../models/paymentCompra';
+import ImagenProduct from '../models/ImagenProduct';
 
 dotenv.config();
 
@@ -23,7 +30,7 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  models: [Rol, User, Email, Product, Stock, Category, Sale, State, Payment, PaymentSale, ProductSale, Batch], // ✅ registra los modelos aquí
+  models: [Rol, User, Email, Product, Stock, Category, Sale, State, Payment, PaymentSale, ProductSale, Batch, Phone, Retiro, Facturacion, Compras, ComprasProduct, PaymentCompra, ImagenProduct], // ✅ registra los modelos aquí
   logging: false,
 });
 

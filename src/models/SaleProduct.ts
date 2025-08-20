@@ -4,8 +4,8 @@ import Sale from "./Sale";
 import Product from "./Product";
 import Stock from "./Stock";
 
-@Table({ tableName: "ProductSale" })
-export default class ProductSale extends Model {
+@Table({ tableName: "SaleProduct" })
+export default class SaleProduct extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column({

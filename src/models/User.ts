@@ -3,6 +3,7 @@ import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, ForeignKey, 
 import Rol from './Rol';
 import Email from './Email';
 import Batch from "./Batch";
+import Phone from "./Phone";
 
 @Table({ tableName: "User" })
 export default class User extends Model {
@@ -37,7 +38,17 @@ export default class User extends Model {
   declare ID_Email: number;
 
   @BelongsTo(() => Email)
-  email?: Email;
+  Email?: Email;
+
+  @ForeignKey(() => Phone)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare ID_Phone: number;
+
+  @BelongsTo(() => Phone)
+  Phone?: Phone;
 
   @Column({
     type: DataType.STRING,

@@ -6,7 +6,7 @@ import { authenticateToken } from '../middlewares/authMiddleware';
 const router = Router();
 
 //router.get('/', getEmail);
-router.post('/', authenticateToken, postCategory);
-router.get('/', getCategories);
+router.post('/', postCategory);
+router.get('/', authenticateToken, getCategories);
 
 export default router;

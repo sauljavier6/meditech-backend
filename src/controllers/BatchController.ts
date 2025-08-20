@@ -32,9 +32,14 @@ export const postBatch = async (req: any, res: any) => {
 };
 
 // GET - Obtener todos los lotes con usuario relacionado
-export const getBatch = async (_req: Request, res: Response) => {
+export const getBatch = async (req: Request, res: Response) => {
+    const userRole = (req as any).user?.ID_Rol;
+    const user = (req as any).user?.ID_User;
+
   try {
-    const batches = await Batch.findAll({
+    let batches;
+    if(userRole===1){
+    batches = await Batch.findAll({
       include: [
         {
           model: User,
@@ -42,6 +47,19 @@ export const getBatch = async (_req: Request, res: Response) => {
         },
       ],
     });
+    }else {
+    batches = await Batch.findAll({
+      where : {
+        ID_User: user
+      },
+      include: [
+        {
+          model: User,
+          attributes: ["ID_User", "Name"],
+        },
+      ],
+    });
+    }
 
     res.status(200).json(batches);
   } catch (error) {

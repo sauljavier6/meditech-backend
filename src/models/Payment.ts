@@ -1,6 +1,7 @@
 // @/models.ts
 import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, HasMany } from "sequelize-typescript";
 import PaymentSale from "./PaymentSale";
+import Retiro from "./Retiro";
 
 @Table({ tableName: "Payment" })
 export default class Payment extends Model {
@@ -26,4 +27,7 @@ export default class Payment extends Model {
   
   @HasMany(() => PaymentSale)
   PaymentSale?: PaymentSale[];
+
+  @HasMany(() => Retiro)
+  Retiro?: Retiro[];
 }

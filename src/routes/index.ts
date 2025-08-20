@@ -8,6 +8,14 @@ import saleRoutes from './saleRoutes';
 import stateRoutes from './stateRoutes';
 import paymentRoutes from './paymentRoutes';
 import batchRoutes from './batchRoutes';
+import clientesRoutes from './clientesRoutes';
+import ticketRoutes from './ticketRoutes';
+import retiroRoutes from './retiroRoutes';
+import quotesRoutes from './quotesRoutes';
+import supplierRoutes from './supplierRoutes';
+import comprasRoutes from './comprasRoutes';
+
+import productERoutes from './ecommerceRoutes/productRoutes';
 
 const router = Router();
 
@@ -21,5 +29,14 @@ router.use('/sale', saleRoutes);
 router.use('/state', stateRoutes);
 router.use('/payment', paymentRoutes);
 router.use('/batch', batchRoutes);
+router.use('/clientes', clientesRoutes);
+router.use('/ticket', ticketRoutes);
+router.use('/retiro', retiroRoutes);
+router.use('/quotes', quotesRoutes);
+router.use('/supplier', supplierRoutes);
+router.use('/compras', comprasRoutes);
+
+//ecommerce routes
+router.use('/ecommerce/products', productERoutes);
 
 export default router;

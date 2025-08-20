@@ -2,6 +2,8 @@ import Product from '../models/Product';
 import Stock from '../models/Stock';
 import Category from '../models/Category';
 import { Op } from "sequelize";
+import ImagenProduct from '../models/ImagenProduct';
+import { Console } from 'console';
 
 
 interface StockItem {
@@ -14,12 +16,12 @@ interface StockItem {
 }
 
 export const getProducts = async (req: any, res: any) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
-  const offset = (page - 1) * limit;
-
   try {
-    const { rows: products, count: totalItems } = await Product.findAndCountAll({
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { rows: products, count } = await Product.findAndCountAll({
       include: [
         {
           model: Category,
@@ -30,21 +32,20 @@ export const getProducts = async (req: any, res: any) => {
           attributes: ['ID_Stock', 'Description', 'Amount', 'Saleprice', 'Purchaseprice'],
         },
       ],
-      limit,
+      order: [['ID_Product', 'DESC']],
       offset,
+      limit,
     });
 
-    const totalPages = Math.ceil(totalItems / limit);
+    const totalPages = Math.ceil(count / limit);
 
     res.status(200).json({
       data: products,
-      pagination: {
-        totalItems,
-        totalPages,
-        currentPage: page,
-        itemsPerPage: limit,
-      },
-      message: 'Success',
+      currentPage: page,
+      totalPages,
+      totalItems: count,
+      hasMore: page < totalPages,
+      message: 'Lista de productos obtenida correctamente',
     });
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -54,22 +55,23 @@ export const getProducts = async (req: any, res: any) => {
 
 
 export const postProducts = async (req: any, res: any) => {
-  const { Description, ID_Category, Code, StockData, Imagen, State } = req.body;
-
   try {
+    const { Description, ID_Category, Code, StockData, Imagenes } = req.body;
 
+    const stock = JSON.parse(StockData);
+
+    // Crear producto
     const newProduct = await Product.create({
       Description,
       ID_Category,
       Code,
-      Imagen,
-      State: State ?? true
+      State: true,
     });
 
-
-    if (Array.isArray(StockData)) {
+    // Crear stock
+    if (Array.isArray(stock)) {
       await Promise.all(
-        StockData.map((stock) =>
+        stock.map((stock) =>
           Stock.create({
             ...stock,
             ID_Product: newProduct.ID_Product,
@@ -79,15 +81,28 @@ export const postProducts = async (req: any, res: any) => {
       );
     }
 
+    // Guardar imágenes si vienen archivos
+    const files = req.files as Express.Multer.File[];
+    console.log(' files', files)
+    if (files && files.length > 0) {
+      const imageData: any = { ID_Product: newProduct.ID_Product };
+      files.forEach((file, index) => {
+        const field = `Imagen${["Uno", "Dos", "Tres", "Cuatro", "Cinco"][index]}`;
+        imageData[field] = file.filename;
+      });
+
+      await ImagenProduct.create(imageData);
+    }
+
     res.status(201).json({
-      message: "Producto y stock registrados correctamente",
+      message: "Producto, stock e imágenes registrados correctamente",
       data: newProduct,
     });
   } catch (error) {
     console.error("Error al crear producto:", error);
     res.status(500).json({ message: "Error del servidor" });
   }
-};    
+};
 
 
 export const deleteproducts = async (req:any, res:any) => {

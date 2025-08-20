@@ -1,9 +1,8 @@
 // @/models.ts
 import { Table, Model, Column, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
 import State from "./State";
-import Payment from "./Payment";
 import PaymentSale from "./PaymentSale";
-import ProductSale from "./SaleProduct";
+import SaleProduct from "./SaleProduct";
 
 @Table({ tableName: "Sale" })
 export default class Sale extends Model {
@@ -14,16 +13,11 @@ export default class Sale extends Model {
   })
   declare ID_Sale: number;
 
-  //relacion tabla category
-  //@ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
   })
   declare ID_User: number;
-
-  //@BelongsTo(() => User)
-  //User?: User;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
@@ -64,6 +58,6 @@ export default class Sale extends Model {
   @HasMany(() => PaymentSale)
   PaymentSale?: PaymentSale[];
 
-  @HasMany(() => ProductSale)
-  ProductSales?: ProductSale[];
+  @HasMany(() => SaleProduct)
+  SaleProduct?: SaleProduct[];
 }
